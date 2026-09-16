@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Frontend",
-    "slug": "Frontend",
+    "slug": "iynzo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -37,6 +37,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7ddbb6e8-884a-4d90-8965-78765accb425"
+      }
+    },
+    "owner": "srafi02"
   }
 }

@@ -1,18 +1,32 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { Redirect, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as SplashScreen from "expo-splash-screen";
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
-  );
+function AuthGuard(){
+  const {isSignedIn} = {isSignedIn: false}
+
+  if (!isSignedIn) {
+   return <Redirect href="/(auth)" />;
+  }else if (isSignedIn) {
+    return <Redirect href="/(tabs)" />;
+  }
+}
+
+export default function RootLayout() {
+  return <GestureHandlerRootView style={{ flex: 1 }}>
+
+     <AuthGuard />
+
+    <Stack screenOptions={{ headerShown: false }} >
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="chat/[id]" options={{ animation: 'slide_from_right' }} />
+    </Stack>
+    <StatusBar style="dark" />
+  </GestureHandlerRootView>
+
 }
