@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../../constants/Colors';
 import { Conversation, UserStory } from '../../../types';
 import Storybar from '../../../components/StoryBar';
+import StoryViewer from '../../../components/StoryViewer';
 
 export default function MessagesScreen() {
 
@@ -66,6 +67,8 @@ export default function MessagesScreen() {
 
     {/*Stories*/}
     <Storybar onViewStory={(us)=> setSelectedStory(us)}/>
+
+      {selectedstory && <StoryViewer  userStory={selectedstory} onClose={()=> setSelectedStory(null)}/>}
 
     {/*Divider*/}
 
