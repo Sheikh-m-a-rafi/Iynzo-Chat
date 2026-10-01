@@ -3,13 +3,14 @@ import { styles } from '@/assets/styles/MessagesScreen.styles';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../../constants/Colors';
 import { Conversation, UserStory } from '../../../types';
 import Storybar from '../../../components/StoryBar';
 import StoryViewer from '../../../components/StoryViewer';
+import ConvoItem from '../../../components/ConvoItem';
 
 export default function MessagesScreen() {
 
@@ -32,6 +33,16 @@ export default function MessagesScreen() {
   useEffect(() => {
     fetchConversations();
   }, []);
+
+  const lowersearch = search.toLowerCase();
+  const filtered = search ? conversations.filter(
+    (c) => c.participant?.name.toLowerCase().includes(lowersearch) || 
+     c.participant?.handle.toLowerCase().includes(lowersearch)
+  ) : conversations;
+
+  const openConvo = (c: Conversation) => {
+    router.push(`/chat/${c._id}`);
+  }
 
   return (
   <SafeAreaView style={styles.safe} edges={['top']}>
@@ -72,7 +83,27 @@ export default function MessagesScreen() {
 
     {/*Divider*/}
 
+    <View style= {styles.divider}/>
+
     {/*Conversations List*/}
+
+    {loading ? (
+      <ActivityIndicator style={{marginTop : 40}} color={Colors.primary}/>
+    ) : (
+      <FlatList 
+      data={filtered}
+      keyExtractor={(c)=>c._id}
+      contentContainerStyle={styles.listContent}
+      renderItem={({item}) => <ConvoItem convo={item} selected={false} onPress={()=> openConvo(item)} />
+    } ListEmptyComponent={
+      <View style={styles.empty}>
+        <Ionicons name="chatbubbles-outline" size={44} color={Colors.outlineVariant} />
+        <Text style={styles.emptyTitle}>No conversations yet</Text>
+        <Text style={styles.emptySubtitle}>Start a conversation by searching for a user or creating a new one.</Text>
+      </View>
+    }/>
+    
+    )}
 
    </SafeAreaView>
   )
